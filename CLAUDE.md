@@ -228,11 +228,196 @@ Example Jira Comment with DoD Verification:
 4. Verify [expected result]
 ```
 
+## Git Workflow for Jira Tickets 🔀
+
+### Branch Naming Convention
+
+Create a feature branch for each Jira ticket using this format:
+
+```
+{ticket-key}/{description}
+
+Examples:
+- DDALKAK-1/setup-project
+- DDALKAK-5/course-generation-form
+- DDALKAK-12/fix-responsive-design
+```
+
+**Branch Naming Rules:**
+- `{ticket-key}`: Jira ticket ID (e.g., DDALKAK-1)
+- `{description}`: Lowercase, kebab-case, descriptive (max 50 chars)
+- Do NOT use `master` or `main` for feature work
+
+### Workflow: From Ticket to Merge
+
+#### 1. **Start Work: Create Feature Branch**
+
+```bash
+# Update master with latest changes
+git checkout master
+git pull origin master
+
+# Create feature branch from master
+git checkout -b DDALKAK-{ticket-number}/{description}
+```
+
+#### 2. **Work & Commit**
+
+**Commit Message Format:**
+```
+DDALKAK-{number}: {type} {description}
+
+Detailed explanation of changes (if needed).
+
+Examples:
+- DDALKAK-5: feat: create course generation form
+- DDALKAK-8: fix: responsive design on mobile
+- DDALKAK-12: refactor: extract course card component
+```
+
+**Commit Types:**
+- `feat:` New feature
+- `fix:` Bug fix
+- `refactor:` Code reorganization (no behavior change)
+- `docs:` Documentation updates
+- `test:` Test additions/updates
+- `chore:` Build process, dependencies, etc.
+
+```bash
+# Make changes and commit
+git add .
+git commit -m "DDALKAK-5: feat: create course generation form"
+
+# Push feature branch
+git push origin DDALKAK-{ticket-number}/{description}
+```
+
+#### 3. **Complete Work & Verify DoD**
+
+Before merging:
+
+1. ✅ All code changes are committed
+2. ✅ All DoD checklist items from CLAUDE.md are completed:
+   - Code implementation ✓
+   - Testing & integration verification ✓
+   - Documentation ✓
+3. ✅ Linting and formatting pass:
+   ```bash
+   npm run lint
+   npm run format:check
+   ```
+4. ✅ All tests pass (if applicable):
+   ```bash
+   npm run test
+   ```
+5. ✅ Add completion comment to Jira with evidence
+
+#### 4. **Merge to Master**
+
+Once DoD is verified:
+
+```bash
+# Ensure feature branch is up to date with master
+git fetch origin
+git rebase origin/master
+
+# Switch to master
+git checkout master
+git pull origin master
+
+# Merge feature branch
+git merge DDALKAK-{ticket-number}/{description}
+
+# Push to remote
+git push origin master
+
+# Delete feature branch (optional but recommended)
+git branch -d DDALKAK-{ticket-number}/{description}
+git push origin --delete DDALKAK-{ticket-number}/{description}
+```
+
+#### 5. **Close Jira Ticket**
+
+Only after merge to master:
+1. Add completion comment with test results
+2. Transition status to "완료" (Done)
+3. Reference commit hash in the ticket
+
+**Example Jira Comment:**
+```markdown
+## ✅ DDALKAK-5 Complete
+
+### Implementation
+- ✅ Code merged to master (commit: abc1234)
+- ✅ All tests passing
+- ✅ ESLint and Prettier verified
+
+### Testing (Playwright)
+- ✅ Form renders correctly
+- ✅ User can enter all fields
+- ✅ Submit button triggers API call
+- ✅ Response displays correctly
+- ✅ Mobile responsive (375px tested)
+
+### DoD Verification
+- ✅ Code implementation complete
+- ✅ Testing verification done
+- ✅ Documentation updated
+- ✅ Ready for production
+```
+
+### Quick Reference Commands
+
+```bash
+# List all branches
+git branch -a
+
+# Switch to existing branch
+git checkout DDALKAK-{number}/{description}
+
+# Create and switch to new branch
+git checkout -b DDALKAK-{number}/{description}
+
+# Check current branch
+git branch
+
+# View commit log for feature
+git log master..HEAD
+
+# Rebase before merge
+git rebase origin/master
+
+# See differences from master
+git diff origin/master
+
+# Undo last local commit (not pushed)
+git reset --soft HEAD~1
+
+# Force pull latest master (CAREFUL: loses local changes)
+git fetch origin && git reset --hard origin/master
+```
+
+### Important Rules
+
+⚠️ **NEVER**:
+- Commit directly to `master`
+- Force push (`git push -f`) to shared branches
+- Merge without DoD verification
+- Leave feature branches unmerged for > 7 days
+
+✅ **ALWAYS**:
+- Create branch from latest `master`
+- Rebase before merging (keep history clean)
+- Use descriptive commit messages
+- Verify all DoD items before closing tickets
+- Delete feature branch after merge
+
 ### Jira Integration
 
 - **Tool**: Use `mcp__claude_ai_Atlassian__*` functions
 - **Status Workflow**: 해야 할 일 → 진행 중 → 완료
 - **Must Use**: Always verify DoD checklist before transitioning to "완료"
+- **Link Branch to Ticket**: Reference ticket ID in commit messages and branch name
 
 ## Frontend Testing with Playwright MCP
 
