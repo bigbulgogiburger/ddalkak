@@ -36,7 +36,7 @@ export default function CourseWizard() {
           name: `${selectedRegion}의 로맨틱한 데이트`,
           region: selectedRegion || '',
           dateType: '로맨틱',
-          estimatedBudget: budget * 1000,
+          estimatedBudget: budget,
           rating: 4.8,
           places: [
             {
@@ -75,7 +75,7 @@ export default function CourseWizard() {
           name: `${selectedRegion}의 힙한 데이트`,
           region: selectedRegion || '',
           dateType: '트렌디',
-          estimatedBudget: budget * 1000 + 50000,
+          estimatedBudget: budget + 5000,
           rating: 4.6,
           places: [
             {
@@ -114,7 +114,7 @@ export default function CourseWizard() {
           name: `${selectedRegion}의 액티브한 데이트`,
           region: selectedRegion || '',
           dateType: '액티브',
-          estimatedBudget: budget * 1000 - 20000,
+          estimatedBudget: budget - 2000,
           rating: 4.7,
           places: [
             {
