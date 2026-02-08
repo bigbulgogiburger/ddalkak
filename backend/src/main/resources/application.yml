@@ -23,7 +23,6 @@ spring:
     default-property-inclusion: non_null
     serialization:
       write-dates-as-timestamps: false
-      encoding: UTF-8
 
   cache:
     type: simple
