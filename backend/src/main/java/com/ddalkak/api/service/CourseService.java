@@ -51,6 +51,13 @@ public class CourseService {
                 .toList();
     }
 
+    public List<CourseResponse> getAllCourses() {
+        List<Course> courses = courseRepository.findAll();
+        return courses.stream()
+                .map(CourseResponse::from)
+                .toList();
+    }
+
     @Transactional
     public CourseResponse updateCourse(Long id, CourseRequest request) {
         Course course = courseRepository.findById(id)

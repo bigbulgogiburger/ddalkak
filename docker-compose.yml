@@ -41,6 +41,11 @@ services:
       JAVA_OPTS: "-Xmx512m -Xms256m"
     ports:
       - "${BACKEND_PORT:-8080}:8080"
+      - "9010:9010"
+    volumes:
+      - ./backend/src:/build/src
+      - ./backend/build.gradle:/build/build.gradle:ro
+      - ./backend/settings.gradle:/build/settings.gradle:ro
     depends_on:
       mysql:
         condition: service_healthy
@@ -61,6 +66,14 @@ services:
       NODE_ENV: ${NODE_ENV:-development}
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/package.json:/app/package.json:ro
+      - ./frontend/next.config.ts:/app/next.config.ts:ro
+      - ./frontend/tsconfig.json:/app/tsconfig.json:ro
+      - ./frontend/.eslintrc.mjs:/app/.eslintrc.mjs:ro
+      - ./frontend/.prettierrc.json:/app/.prettierrc.json:ro
     depends_on:
       - backend
     networks:

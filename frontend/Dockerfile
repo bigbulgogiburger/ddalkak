@@ -1,7 +1,10 @@
-# Build stage
-FROM node:22-alpine AS builder
+# Development stage - supports hot reloading
+FROM node:22-alpine
 
 WORKDIR /app
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Copy package files
 COPY package*.json ./
@@ -9,33 +12,12 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci
 
-# Copy source code
+# Copy source code (will be overridden by volume mount in docker-compose)
 COPY . .
-
-# Build the application
-RUN npm run build
-
-# Runtime stage
-FROM node:22-alpine AS runner
-
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-
-# Create non-root user for security
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
-
-# Copy built application from builder
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
 
 EXPOSE 3000
 
 ENV PORT=3000
 
-CMD ["node", "server.js"]
+# Run Next.js dev server with hot reloading
+CMD ["npm", "run", "dev"]

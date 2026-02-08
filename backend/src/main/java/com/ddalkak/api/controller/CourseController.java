@@ -19,6 +19,12 @@ public class CourseController {
 
     private final CourseService courseService;
 
+    @GetMapping
+    public ResponseEntity<List<CourseResponse>> getAllCourses() {
+        log.info("Fetching all courses");
+        return ResponseEntity.ok(courseService.getAllCourses());
+    }
+
     @PostMapping("/recommend")
     public ResponseEntity<CourseResponse> recommendCourse(@Valid @RequestBody CourseRequest request) {
         log.info("Course recommendation requested: region={}, dateType={}, budget={}",

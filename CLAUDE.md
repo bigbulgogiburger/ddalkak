@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+
+## Language
+
+- **Language**: Korean
+
 ---
 
 ## ⚠️ CRITICAL: Definition of Done (DoD) is MANDATORY
