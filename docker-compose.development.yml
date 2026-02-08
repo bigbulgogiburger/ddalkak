@@ -1,0 +1,35 @@
+version: '3.8'
+
+# Development-specific overrides for docker-compose.yml
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.development.yml up
+
+services:
+  backend:
+    # Enable hot reload with volume mount for development
+    volumes:
+      - ./backend/src:/build/src
+      - ./backend/build.gradle:/build/build.gradle:ro
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      - "9010:8080"  # Debug port for IDE debugging
+    command: gradle bootRun
+
+  frontend:
+    # Enable next.js hot reload
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/package.json:/app/package.json:ro
+      - ./frontend/next.config.ts:/app/next.config.ts:ro
+      - ./frontend/.env.local:/app/.env.local:ro
+    environment:
+      NODE_ENV: development
+    command: npm run dev
+
+  mysql:
+    # Expose MySQL for direct connection from IDE
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: dev_password
+      MYSQL_PASSWORD: dev_password
