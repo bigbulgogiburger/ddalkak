@@ -2,6 +2,24 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+---
+
+## ⚠️ CRITICAL: Definition of Done (DoD) is MANDATORY
+
+**BEFORE marking ANY Jira ticket as "완료" (Done), you MUST:**
+
+1. ✅ Complete ALL code implementation tasks
+2. ✅ Run full testing verification:
+   - **Frontend**: Use Playwright MCP to test UI (screenshots required)
+   - **Backend**: Make actual API calls to test integration
+3. ✅ Check ALL items in the DoD checklist in Jira
+4. ✅ Add detailed completion comment with test evidence
+5. ✅ Only then transition status to "완료"
+
+**If DoD checklist is incomplete, DO NOT mark the ticket as done.**
+
+---
+
 ## Project Overview
 
 **데이트 딸깍 (Date Ddalkak)** - AI-powered dating course recommendation service for Z-generation couples.
@@ -119,50 +137,149 @@ export const getCourseRecommendation = async (
 
 ## Critical Development Requirements
 
-### Testing Before Marking Issues Complete ⚠️
+### Definition of Done (DoD) Checklist ⚠️ **MANDATORY**
 
-**IMPORTANT**: Before marking a Jira ticket as complete, ALWAYS:
+**EVERY Jira ticket MUST complete ALL of the following before marking as "완료" (Done):**
 
-1. **Frontend Changes**: Use Playwright MCP to verify UI works correctly
-   - Test component rendering
-   - Test user interactions
-   - Take screenshots of the implementation
-   - Verify responsive design if applicable
+#### 1. **Code Implementation**
+- [ ] Code written and committed to git
+- [ ] Code follows TypeScript/language standards
+- [ ] No console.log, debug code, or commented code left
+- [ ] No security vulnerabilities introduced
+- [ ] Linting passes: `npm run lint`
+- [ ] Formatting passes: `npm run format:check`
 
-2. **Backend Changes**: Test actual API calls
-   - Make real API requests to verify integration
-   - Test error handling and edge cases
-   - Validate response format matches spec
+#### 2. **Testing & Integration Verification** (Non-Negotiable)
 
-3. **Full-Stack Features**: End-to-end testing
-   - Test complete user flow from frontend to backend
-   - Verify data persistence
-   - Check error handling
+**Frontend Changes** 🎨
+- [ ] **MUST** use Playwright MCP to test
+- [ ] Component renders correctly
+- [ ] User interactions work (clicks, inputs, navigation)
+- [ ] Responsive design tested (mobile, tablet, desktop)
+- [ ] Error states handled and displayed
+- [ ] Screenshots/videos captured showing working feature
+- [ ] No console errors or warnings
+
+**Backend Changes** 🔌
+- [ ] **MUST** test actual API calls (not just unit tests)
+- [ ] API endpoint returns correct response format
+- [ ] Error handling works (400, 500, etc.)
+- [ ] Edge cases tested
+- [ ] Response times acceptable (p95 < 500ms target)
+- [ ] Database changes verified
+- [ ] Backward compatibility checked
+
+**Full-Stack Features** 🔄
+- [ ] End-to-end flow tested from UI to database
+- [ ] Frontend successfully calls backend API
+- [ ] Data persists correctly
+- [ ] Error handling works across layers
+
+#### 3. **Documentation**
+- [ ] Code comments added for complex logic
+- [ ] Function/component types documented
+- [ ] API responses documented (if applicable)
+
+#### 4. **Jira Ticket Updates** 📋
+- [ ] All DoD checklist items CHECKED in Jira
+- [ ] Detailed completion comment added with:
+  - What was implemented
+  - How to test/verify it
+  - Any breaking changes or dependencies
+  - Screenshots/test results if applicable
+- [ ] Status transitioned to "완료" (Done)
+
+### How to Handle Jira Checklists
+
+1. **Find the checklist** in the ticket description or use Jira's "Checklists" feature
+2. **Check items as you complete them** - don't wait until the end
+3. **Before marking complete**, verify ALL items are checked
+4. **Add completion comment** with test results and evidence
+5. **Only then** transition status to "완료"
+
+Example Jira Comment with DoD Verification:
+```markdown
+## ✅ DDALKAK-XX Complete - All DoD Items Verified
+
+### Code Implementation
+- ✅ Code committed: abc1234
+- ✅ ESLint: PASS
+- ✅ Prettier: PASS
+- ✅ No console logs or debug code
+
+### Testing Verification
+**Frontend Testing (Playwright):**
+- ✅ Component renders on page load
+- ✅ User can input data and submit
+- ✅ Response displays correctly
+- ✅ Mobile responsive (tested 375px width)
+- ✅ Screenshot: [description of screenshot]
+
+### Jira DoD Checklist
+- ✅ Code implementation
+- ✅ Testing complete
+- ✅ Documentation added
+- ✅ Ready for production
+
+### How to Test
+1. npm run dev
+2. Navigate to [page]
+3. Perform [action]
+4. Verify [expected result]
+```
 
 ### Jira Integration
 
 - **Tool**: Use `mcp__claude_ai_Atlassian__*` functions
 - **Status Workflow**: 해야 할 일 → 진행 중 → 완료
-- **Comments**: Always add detailed completion notes with:
-  - What was implemented
-  - How to run/test it
-  - Any dependencies or next steps
+- **Must Use**: Always verify DoD checklist before transitioning to "완료"
 
-Example:
-```markdown
-## ✅ Feature Complete
+## Frontend Testing with Playwright MCP
 
-### What was built:
-- Component X with features Y, Z
-- Integration with API endpoint
+### Required for ALL Frontend Changes
 
-### Testing:
-- Playwright E2E tests pass
-- API returns expected format
+When making frontend changes, **ALWAYS** use Playwright MCP to verify:
 
-### How to test:
-npm run dev && visit /feature-page
+```javascript
+// Use mcp__playwright__* functions to:
+1. Navigate to the feature page
+2. Interact with components (click, type, select)
+3. Verify expected results appear
+4. Take screenshots showing the working feature
+5. Test error states and edge cases
+6. Verify responsive design
+
+Example Test Flow:
+- mcp__playwright__browser_navigate → page
+- mcp__playwright__browser_fill → user input
+- mcp__playwright__browser_click → submit action
+- mcp__playwright__browser_snapshot → capture result
+- mcp__playwright__browser_take_screenshot → save evidence
 ```
+
+### Common Playwright MCP Tools
+
+| Tool | Purpose |
+|------|---------|
+| `browser_navigate` | Navigate to URL |
+| `browser_fill` / `browser_fill_form` | Fill input fields |
+| `browser_click` | Click buttons/elements |
+| `browser_snapshot` | Get accessibility tree (better than screenshot) |
+| `browser_take_screenshot` | Capture visual proof |
+| `browser_wait_for` | Wait for elements/text to appear |
+| `browser_press_key` | Press keyboard keys |
+| `browser_select_option` | Select dropdown options |
+
+### Evidence Required for DoD Completion
+
+Frontend changes MUST include:
+1. **Snapshots**: HTML structure verification
+2. **Screenshots**: Visual proof of working feature
+3. **User interaction proof**: Evidence of click/input/navigation working
+4. **Error state testing**: Screenshots of error messages
+5. **Responsive testing**: Screenshots at different viewport sizes
+
+---
 
 ## Core Features (MVP)
 
